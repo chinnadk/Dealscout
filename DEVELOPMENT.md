@@ -1,6 +1,6 @@
 # DealScout
 
-A React + Node.js deals website, with SQLite, daily price history, search, filters, saved deals, a history chart, and outbound click counts. A separate adapter deploys the same API and React interface to Sites using Cloudflare D1.
+A React + Node.js deals website, with PostgreSQL/Neon or local SQLite, daily price history, search, filters, saved deals, a history chart, and outbound click counts. A separate adapter deploys the same API and React interface to Sites using Cloudflare D1.
 
 ## Run with Node.js
 
@@ -13,7 +13,21 @@ npm.cmd run build:node
 npm.cmd run start:node
 ```
 
-Open http://127.0.0.1:3000. The server applies schema migrations on startup and stores records in `data/dealscout.sqlite`. Override `PORT`, `HOST`, or `DATABASE_PATH` with environment variables. Bind to a public interface only behind your chosen HTTPS proxy. Rebuild the frontend after editing it. Tests: `npm.cmd test`. Type check: `node node_modules/typescript/bin/tsc --noEmit`.
+Open http://127.0.0.1:3000. Without `DATABASE_URL`, the server applies SQLite schema migrations on startup and stores records in `data/dealscout.sqlite`. Override `PORT`, `HOST`, or `DATABASE_PATH` with environment variables. Bind to a public interface only behind your chosen HTTPS proxy. Rebuild the frontend after editing it. Tests: `npm.cmd test`. Type check: `node node_modules/typescript/bin/tsc --noEmit`.
+
+## Render Free with Neon PostgreSQL
+
+1. In the Neon project, click **Connect**. Select the correct branch/database and enable **Connection pooling**. Copy the raw PostgreSQL connection string, not the surrounding `psql` command. Keep its TLS parameters.
+2. In Render, open DealScout > Environment > Add Environment Variable. Set `DATABASE_URL` to the complete Neon connection string. Paste it only into Render's secret value field; never into source code, a GitHub file, a screenshot, or a chat message.
+3. Keep `HOST=0.0.0.0`, `NODE_VERSION=24.13.0`, build command `npm ci --include=dev && npm run build:node`, and start command `npm run start:node`. `DATABASE_PATH` is ignored when `DATABASE_URL` exists and can be removed.
+4. Save and deploy the latest GitHub commit. Startup applies the schema-only PostgreSQL migrations in `server/migrations/postgres/`. Initial demo data is inserted separately on the first catalog request if the catalog is empty.
+5. Open `/api/health`. The expected body is `{"status":"ok","database":"postgresql"}`. If it says `sqlite`, `DATABASE_URL` was not supplied to that deployed service. No secret is included in this response.
+
+A malformed, empty, or unreachable configured `DATABASE_URL` stops startup rather than falling back to a temporary SQLite file. Logs identify the selected database type but do not print credentials. Remote PostgreSQL connections verify TLS certificates and use at most five pooled client connections. Use a Neon region near your Render service.
+
+Neon data remains in Neon when Render restarts or sleeps. This does not remove Render's cold-start delay or the providers' free usage limits. This connection starts a new PostgreSQL database; existing SQLite/D1 records are not automatically copied. Back up any real existing records before switching. The demonstration catalog can be reseeded safely. Never edit an applied PostgreSQL SQL file; append a new migration. Startup migrations are serialized using a transaction-scoped advisory lock and checked by checksum.
+
+PostgreSQL integration tests run only when `TEST_DATABASE_URL` points to a dedicated **local** test PostgreSQL cluster. They create and drop a uniquely named test database and verify imports, bigint prices, duplicate handling, transaction rollback, migrations, and persistence after reconnecting. They never use the production `DATABASE_URL` or a remote Neon project.
 
 ## Data model and daily comparison
 

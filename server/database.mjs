@@ -14,5 +14,5 @@ export function openDatabase(filename=process.env.DATABASE_PATH||"./data/dealsco
    try{sqlite.exec(readFileSync(resolve(folder,file),"utf8"));sqlite.prepare("INSERT INTO _migrations(name) VALUES (?)").run(file);sqlite.exec("COMMIT");}catch(e){sqlite.exec("ROLLBACK");throw e;}
  }
  function statement(sql,values=[]){return {bind(...v){return statement(sql,v);},async all(){return {results:sqlite.prepare(sql).all(...values)};},async first(){return sqlite.prepare(sql).get(...values)??null;},async run(){return sqlite.prepare(sql).run(...values);},_sql:sql,_values:values};}
- return {prepare:sql=>statement(sql),async batch(statements){sqlite.exec("BEGIN IMMEDIATE");try{const results=statements.map(s=>sqlite.prepare(s._sql).run(...s._values));sqlite.exec("COMMIT");return results;}catch(e){sqlite.exec("ROLLBACK");throw e;}},close:()=>sqlite.close()};
+ return {kind:"sqlite",prepare:sql=>statement(sql),async batch(statements){sqlite.exec("BEGIN IMMEDIATE");try{const results=statements.map(s=>sqlite.prepare(s._sql).run(...s._values));sqlite.exec("COMMIT");return results;}catch(e){sqlite.exec("ROLLBACK");throw e;}},close:()=>sqlite.close()};
 }

@@ -6,6 +6,10 @@ export async function handleApi(request,db,token) {
   if (!db) return unavailable();
   try {
     const path = new URL(request.url).pathname;
+    if (request.method === "GET" && path === "/api/health") {
+      await db.prepare("SELECT 1 AS connected").first();
+      return json({status:"ok",database:db.kind||"d1"});
+    }
     if (request.method === "GET" && path === "/api/deals") {
       const found = await db.prepare("SELECT id FROM products LIMIT 1").first();
       if (!found) await seedDemo(db);

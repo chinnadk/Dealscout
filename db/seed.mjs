@@ -15,11 +15,11 @@ export async function seedDemo(db) {
   const statements = [];
   for (const p of demoProducts) {
     const url = p.retailer === "Amazon" ? `https://www.amazon.in/s?k=${encodeURIComponent(p.query)}` : `https://www.flipkart.com/search?q=${encodeURIComponent(p.query)}`;
-    statements.push(db.prepare("INSERT OR IGNORE INTO products (id,retailer,retailer_id,title,category,description,image,url,mrp,demo) VALUES (?,?,?,?,?,?,?,?,?,1)").bind(p.id,p.retailer,p.retailerId,p.title,p.category,p.description,p.image,url,p.mrp));
+    statements.push(db.prepare("INSERT INTO products (id,retailer,retailer_id,title,category,description,image,url,mrp,demo) VALUES (?,?,?,?,?,?,?,?,?,1) ON CONFLICT(id) DO NOTHING").bind(p.id,p.retailer,p.retailerId,p.title,p.category,p.description,p.image,url,p.mrp));
     p.prices.forEach((price,i) => {
       if (price === null) return;
       const day = `2026-10-${21+i}`;
-      statements.push(db.prepare("INSERT OR IGNORE INTO daily_prices (product_id,day,price,observed_at,source) VALUES (?,?,?,?,'demo')").bind(p.id,day,price,`${day}T07:00:00.000Z`));
+      statements.push(db.prepare("INSERT INTO daily_prices (product_id,day,price,observed_at,source) VALUES (?,?,?,?,'demo') ON CONFLICT(product_id,day,source) DO NOTHING").bind(p.id,day,price,`${day}T07:00:00.000Z`));
     });
   }
   await db.batch(statements);
