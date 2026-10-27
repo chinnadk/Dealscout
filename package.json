@@ -7,7 +7,7 @@
   },
   "scripts": {
     "test": "node --test tests/*.test.mjs",
-    "build:node": "vite build --config vite.node.config.ts",
+    "build:node": "vite build --config vite.node.config.ts && node scripts/build-public-pages.mjs",
     "start:node": "node server/index.mjs",
     "install:ci": "node scripts/install-ci.mjs",
     "dev": "node scripts/run-framework.mjs dev",

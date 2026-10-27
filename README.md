@@ -3,6 +3,7 @@
 React deals storefront with a Node.js API, daily price comparisons, and PostgreSQL/Neon or local SQLite storage.
 
 - **Render + Neon setup:** [NEON-SETUP.md](NEON-SETUP.md)
+- **Affiliate application and feed preparation:** [AFFILIATE-ONBOARDING.md](AFFILIATE-ONBOARDING.md)
 - **Local development and API imports:** [DEVELOPMENT.md](DEVELOPMENT.md)
 - Build the standalone frontend: `npm run build:node`
 - Start the Node.js server: `npm run start:node`

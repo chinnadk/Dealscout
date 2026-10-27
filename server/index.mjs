@@ -26,7 +26,7 @@ const server=createServer(async(req,res)=>{
    const filename=resolve(root,"."+decodeURIComponent(url.pathname));
    if(filename!==root&&!filename.startsWith(root+sep)){res.writeHead(403);res.end("Forbidden");return;}
    let target=filename;
-   try{if(!(await stat(target)).isFile())target=resolve(root,"index.html");}catch{if(extname(url.pathname)){res.writeHead(404);res.end("Not found");return;}target=resolve(root,"index.html");}
+   try{if((await stat(target)).isDirectory())target=resolve(target,"index.html");if(!(await stat(target)).isFile())throw new Error("Not a file");}catch{res.writeHead(404,{"Content-Type":"text/plain; charset=utf-8"});res.end("Page not found. Visit / for DealScout.");return;}
    const body=await readFile(target);
    res.writeHead(200,{"Content-Type":types[extname(target)]||"application/octet-stream","X-Content-Type-Options":"nosniff","Cache-Control":target.includes(sep+"assets"+sep)?"public, max-age=31536000, immutable":"no-cache"});res.end(req.method==="HEAD"?undefined:body);
  }catch{res.writeHead(500,{"Content-Type":"text/plain"});res.end("Unable to serve this request. Run npm run build:node before starting.");}
