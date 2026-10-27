@@ -6,7 +6,7 @@ Prepared 27 October 2026. No affiliate account or product feed is connected. Add
 
 The site now includes ten original shopping guides, About, Privacy, Affiliate Disclosure, and a price-comparison methodology page. Articles are readable in HTML without JavaScript. The catalog remains a clearly labeled demonstration, not live retailer offers or hands-on product reviews. Read and edit the guides so they represent what you want to publish.
 
-Add your public contact email as Render environment variable `PUBLIC_CONTACT_EMAIL` and choose **Save, rebuild, and deploy**. This build-time setting generates `/contact`; it is intentionally public. Do not use a private address you do not want published. Optional `PUBLIC_SITE_URL` sets the canonical origin and sitemap if you later connect a domain. It defaults to the current Render URL. Regenerate pages by rebuilding after either changes.
+The publisher selected `chinnadk@gmail.com` for the public Contact page. Its default is recorded in `lib/site-info.mjs`. To change it, update that file or override it with Render build-time environment variable `PUBLIC_CONTACT_EMAIL`, then rebuild and deploy. It is intentionally public. Optional `PUBLIC_SITE_URL` sets the canonical origin and sitemap if you later connect a domain. It defaults to the current Render URL. Regenerate pages by rebuilding after either changes.
 
 The article index is `/guides`, with real `/guides/<slug>` pages. Public method and information pages are `/about`, `/privacy`, `/affiliate-disclosure`, and `/how-we-track-prices`. The build writes `robots.txt` and `sitemap.xml`. These measures help discoverability; they do not establish eligibility or ranking.
 

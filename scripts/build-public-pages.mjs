@@ -3,13 +3,14 @@ import {renderToStaticMarkup} from "react-dom/server";
 import {mkdir,readFile,writeFile} from "node:fs/promises";
 import {resolve} from "node:path";
 import {guides,guidePath,editorialDate} from "../lib/editorial.mjs";
+import {publicContactEmail} from "../lib/site-info.mjs";
 
 const h=React.createElement;
 const root=resolve("node-dist");
 const manifest=JSON.parse(await readFile(resolve(root,".vite/manifest.json"),"utf8"));
 const styles=manifest["index.html"].css||[];
 const origin=new URL(process.env.PUBLIC_SITE_URL||"https://dealscout-pjkc.onrender.com").origin;
-const contact=(process.env.PUBLIC_CONTACT_EMAIL||"").trim();
+const contact=(process.env.PUBLIC_CONTACT_EMAIL||publicContactEmail).trim();
 if(contact&&!/^[^\s@<>]+@[^\s@<>]+\.[^\s@<>]+$/.test(contact))throw new Error("PUBLIC_CONTACT_EMAIL must be a valid public email address.");
 const p=text=>h("p",null,text);
 const link=(path,label)=>h("a",{href:path},label);
