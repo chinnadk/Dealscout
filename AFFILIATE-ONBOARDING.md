@@ -1,6 +1,6 @@
-# Affiliate onboarding for DealScout
+# Affiliate onboarding for CartWatch
 
-Prepared 27 October 2026. No affiliate account or product feed is connected. Adding pages or deploying this application does not guarantee account approval.
+Updated 28 October 2026. Amazon Store ID `cartwatch-21` and the publisher-supplied SiteStripe link for ASIN `B08V1TYPV9` are published in the separate affiliate-pick section. No live product feed or Flipkart affiliate account is connected. Adding pages or deploying this application does not guarantee account approval.
 
 ## 1. Review the public website
 
@@ -48,3 +48,7 @@ The existing protected `/api/products` and `/api/prices` routes and `scripts/imp
 Only import data you are entitled to obtain, retain, and display. Preserve provider-generated destination links. Do not manufacture yesterday's prices. Determine account-specific retention, refresh, disclosure, and timestamp requirements before turning on live imports. Credentials belong in Render's environment settings, never in frontend code or a public file.
 
 Daily polling and Telegram automation have not been configured. They should be designed after the authorized feed and its limits are known. Render's free service sleeps; a background timer inside it is not a reliable daily job scheduler.
+
+## Published affiliate pick
+
+`lib/affiliate-picks.mjs` shares the publisher-provided Amazon destination and disclosure between the React homepage and initial HTML. Add future hand-curated links there. Preserve SiteStripe links. No retailer price, MRP, rating, image or fabricated history is displayed for these picks. Category artwork is an original illustration, not a product photograph. The existing database and eight historical demo products are unchanged. The public brand is now CartWatch; the GitHub repository and Render service URL retain their existing names.

@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import "./dealscout.css";
 
 export const metadata: Metadata = {
-  title: "DealScout — Good finds. Great prices.",
+  title: "CartWatch — Good finds. Great prices.",
   description: "Discover Amazon and Flipkart deals, compare daily prices, and explore price history.",
   icons: {
     icon: "/dealscout.svg",
